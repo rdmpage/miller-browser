@@ -1,0 +1,98 @@
+{
+  "prefixes": {
+    "dwc": "http://rs.tdwg.org/dwc/terms/",
+    "dwciri": "http://rs.tdwg.org/dwc/iri/",
+    "gbif": "http://rs.gbif.org/terms/1.0/",
+    "gbifs": "https://rs.gbif.org/terms/",
+    "skos": "http://www.w3.org/2004/02/skos/core#",
+    "dcat": "http://www.w3.org/ns/dcat#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "wdt": "http://www.wikidata.org/prop/direct/",
+    "geo": "http://www.opengis.net/ont/geosparql#",
+    "foaf": "http://xmlns.com/foaf/0.1/",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  },
+  "hiddenPredicates": [
+    "dwc:issue"
+  ],
+  "types": {
+    "dwc:Occurrence": {
+      "title": [
+        "{dwc:catalogNumber}",
+        "GBIF {gbif:gbifID}"
+      ],
+      "summary": [
+        "dwc:eventDate",
+        "dwc:countryCode",
+        "dwc:basisOfRecord",
+        "dwc:institutionCode"
+      ]
+    },
+    "dwc:Taxon": {
+      "summary": [
+        "dwc:taxonRank",
+        "dwc:family"
+      ]
+    },
+    "dwc:Location": {
+      "summary": [
+        "dwc:stateProvince",
+        "dwc:countryCode"
+      ]
+    },
+    "dcterms:BibliographicResource": {
+      "title": [
+        "dcterms:bibliographicCitation"
+      ]
+    },
+    "foaf:Image": {
+      "summary": [
+        "dcterms:creator"
+      ],
+      "image": "{iri}"
+    },
+    "gbifs:Description": {
+      "title": [
+        "{dcterms:type}: {rdf:value}"
+      ],
+      "summary": [
+        "dcterms:source"
+      ]
+    }
+  },
+  "edges": {
+    "in dwciri:toTaxon dwc:Occurrence": {
+      "label": "Occurrences"
+    },
+    "out dwciri:toTaxon": {
+      "label": "Taxon"
+    },
+    "out skos:broader": {
+      "label": "Parent"
+    },
+    "in skos:broader": {
+      "label": "Children"
+    },
+    "out dwciri:inDescribedPlace": {
+      "label": "Place"
+    },
+    "in dwciri:inDescribedPlace": {
+      "label": "Occurrences here"
+    },
+    "out gbifs:sourceDataset": {
+      "label": "Source dataset"
+    },
+    "in gbifs:sourceDataset": {
+      "label": "Taxa"
+    },
+    "out dcterms:references": {
+      "label": "References"
+    },
+    "out foaf:depiction": {
+      "label": "Images"
+    },
+    "out gbifs:hasDescription": {
+      "label": "Descriptions"
+    }
+  }
+}

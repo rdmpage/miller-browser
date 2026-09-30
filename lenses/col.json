@@ -1,0 +1,65 @@
+{
+  "prefixes": {
+    "schema": "https://schema.org/",
+    "dwc": "http://rs.tdwg.org/dwc/terms/"
+  },
+  "types": {
+    "schema:Person": {
+      "title": [
+        "schema:givenName",
+        "schema:familyName"
+      ]
+    },
+    "schema:CreativeWork": {
+      "summary": [
+        "schema:datePublished",
+        "schema:pagination",
+        "schema:description"
+      ]
+    },
+    "schema:Taxon": {
+      "summary": [
+        "schema:taxonRank",
+        "dwc:taxonomicStatus"
+      ]
+    }
+  },
+  "edges": {
+    "in schema:parentTaxon": {
+      "label": "Children"
+    },
+    "out schema:parentTaxon": {
+      "label": "Parent"
+    },
+    "in dwc:acceptedNameUsageID": {
+      "label": "Synonyms"
+    },
+    "out dwc:acceptedNameUsageID": {
+      "label": "Accepted name"
+    },
+    "out schema:scientificName": {
+      "label": "Name"
+    },
+    "in schema:scientificName": {
+      "label": "Taxon"
+    },
+    "out schema:isBasedOn": {
+      "label": "Published in"
+    },
+    "in schema:isBasedOn": {
+      "label": "Names published here"
+    },
+    "in schema:isPartOf schema:Taxon": {
+      "label": "Taxa"
+    },
+    "out schema:isPartOf": {
+      "label": "Source dataset"
+    },
+    "out schema:creator": {
+      "label": "Creators"
+    },
+    "in schema:creator": {
+      "label": "Works"
+    }
+  }
+}

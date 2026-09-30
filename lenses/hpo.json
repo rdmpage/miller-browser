@@ -1,0 +1,35 @@
+{
+  "prefixes": {
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "obo": "http://purl.obolibrary.org/obo/",
+    "oboInOwl": "http://www.geneontology.org/formats/oboInOwl#"
+  },
+  "hiddenTypes": [
+    "owl:Axiom",
+    "owl:Restriction"
+  ],
+  "types": {
+    "owl:Class": {
+      "summary": [
+        "oboInOwl:id",
+        "obo:IAO_0000115",
+        "oboInOwl:hasExactSynonym"
+      ]
+    }
+  },
+  "edges": {
+    "in rdfs:subClassOf": {
+      "label": "Subclasses"
+    },
+    "out rdfs:subClassOf": {
+      "label": "Superclasses"
+    },
+    "in owl:equivalentClass": {
+      "label": "Equivalent classes"
+    },
+    "out owl:equivalentClass": {
+      "label": "Equivalent classes"
+    }
+  }
+}

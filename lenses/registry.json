@@ -1,0 +1,69 @@
+{
+  "prefixes": {
+    "skos": "http://www.w3.org/2004/02/skos/core#",
+    "skosxl": "http://www.w3.org/2008/05/skos-xl#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "grant": "http://data.crossref.org/fundingdata/xml/schema/grant/grant-1.2/",
+    "fund": "http://data.crossref.org/fundingdata/",
+    "nschema": "https://none.schema.org/"
+  },
+  "labelProperties": [
+    "skosxl:prefLabel/skosxl:literalForm"
+  ],
+  "hiddenPredicates": [
+    "skosxl:prefLabel",
+    "skosxl:altLabel",
+    "nschema:address"
+  ],
+  "types": {
+    "skos:Concept": {
+      "summary": [
+        "grant:fundingBodySubType",
+        "grant:region"
+      ],
+      "fields": [
+        {
+          "label": "Also known as",
+          "path": "skosxl:altLabel/skosxl:literalForm"
+        },
+        {
+          "label": "Address country",
+          "path": "nschema:address/nschema:addressCountry"
+        }
+      ]
+    }
+  },
+  "edges": {
+    "out skos:narrower": {
+      "label": "Narrower"
+    },
+    "in skos:narrower": {
+      "label": "Broader"
+    },
+    "out skos:broader": {
+      "label": "Broader"
+    },
+    "in skos:broader": {
+      "label": "Narrower"
+    },
+    "in skos:inScheme": {
+      "label": "Funders in scheme"
+    },
+    "out skos:hasTopConcept": {
+      "label": "Top concepts"
+    },
+    "in skos:hasTopConcept": {
+      "label": "Scheme"
+    },
+    "out grant:affilWith": {
+      "label": "Affiliated with"
+    },
+    "in grant:affilWith": {
+      "label": "Affiliates"
+    }
+  },
+  "hiddenTypes": [
+    "skosxl:Label",
+    "nschema:postalAddress"
+  ]
+}
