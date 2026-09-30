@@ -64,3 +64,9 @@ mirrored in the URL so a trail can be shared.
 - `~/Sites/grouse`, especially the Phase 3 relationships query in its TODO
 - `~/Sites/interface-templates/miller columns/1.html` (the original mockup)
 - https://github.com/rdmpage/react-miller-columns (ideas only)
+
+## Logo
+
+Joe Miller's porkpie hat, from *The Expanse*. Miller follows one lead to the
+next until he ends up somewhere nobody expected, which is what browsing a trail
+of columns feels like.
