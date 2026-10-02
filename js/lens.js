@@ -17,8 +17,8 @@ export class Lens {
     // Lens label properties come first, then the endpoint defaults.
     this.labelProperties = [...new Set([...(json.labelProperties || []).map(r), ...(defaults.labelProperties || [])])];
     this.predicateLabels = new Map(Object.entries(json.predicateLabels || {}).map(([p, l]) => [x(p), l]));
-    this.hiddenTypes = new Set((json.hiddenTypes || []).map(x));
-    this.hiddenPredicates = new Set((json.hiddenPredicates || []).map(x));
+    this.hiddenTypes = new Set([...(json.hiddenTypes || []).map(x), ...(defaults.hiddenTypes || [])]);
+    this.hiddenPredicates = new Set([...(json.hiddenPredicates || []).map(x), ...(defaults.hiddenPredicates || [])]);
 
     this.types = new Map();
     for (const [t, spec] of Object.entries(json.types || {})) {

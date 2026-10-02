@@ -170,9 +170,15 @@ export class Queries {
 
   searchPattern(text) {
     const lits = [JSON.stringify(text), `${JSON.stringify(text)}@en`].join(' ');
-    const branches = [`{ ${values('lp', this.plainLabelProps)} ?x ?lp ?l }`,
-      ...this.labelPaths.map((path) => `{ ?x ${path} ?l }`)];
-    return `VALUES ?l { ${lits} } ${branches.join(' UNION ')}`;
+    // The search text goes inside every branch: with one VALUES outside a
+    // UNION, Oxigraph evaluates the branches unbound (a 502 on CoL).
+    const textValues = `VALUES ?l { ${lits} }`;
+    const branches = [`{ ${textValues} ${values('lp', this.plainLabelProps)} ?x ?lp ?l }`,
+      ...this.labelPaths.map((path) => `{ ${textValues} ?x ${path} ?l }`)];
+    // Hidden plumbing, and label nodes such as SKOS-XL's, are not results.
+    const hidden = [...new Set([...this.lens.hiddenTypes, ...(this.cfg.notSearchable || [])])];
+    const notHidden = hidden.length ? `FILTER NOT EXISTS { ${values('ht', hidden)} ?x a ?ht }` : '';
+    return `${branches.join(' UNION ')} ${notHidden}`;
   }
 
   // Number of distinct ?x matching `pattern`, capped: returns { n, capped }.
@@ -191,12 +197,28 @@ export class Queries {
     let q;
     if (sorted) {
       const sort = t && this.lens.types.get(t)?.sort;
-      const labelPath = this.lens.labelProperties[0];
       let keyPattern;
-      if (sort) keyPattern = `OPTIONAL { ?x ${iri(sort.property)} ?k0 }`;
-      else if (isPath(labelPath)) keyPattern = `OPTIONAL { ?x ${labelPath} ?k0 }`;
-      else keyPattern = `OPTIONAL { ${values('lp', this.plainLabelProps)} ?x ?lp ?k0 }`;
-      const key = sort?.numeric ? 'MIN(xsd:double(?k0))' : 'MIN(STR(?k0))';
+      let key;
+      if (sort) {
+        keyPattern = `OPTIONAL { ?x ${iri(sort.property)} ?k0 }`;
+        key = sort.numeric ? 'MIN(xsd:double(?k0))' : 'MIN(STR(?k0))';
+      } else {
+        // Sort by label: the plain label properties together, plus one
+        // OPTIONAL per label path, in the order the label properties give.
+        const parts = [];
+        const vars = [];
+        for (const p of this.lens.labelProperties) {
+          if (isPath(p)) {
+            vars.push(`?k${parts.length}`);
+            parts.push(`OPTIONAL { ?x ${p} ?k${parts.length} }`);
+          } else if (!parts.some((s) => s.includes('?lp'))) {
+            vars.push(`?k${parts.length}`);
+            parts.push(`OPTIONAL { ${values('lp', this.plainLabelProps)} ?x ?lp ?k${parts.length} }`);
+          }
+        }
+        keyPattern = parts.join(' ');
+        key = vars.length > 1 ? `MIN(STR(COALESCE(${vars.join(', ')})))` : `MIN(STR(${vars[0]}))`;
+      }
       q = `PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT ?x (${key} AS ?k) WHERE { ${pattern} ${keyPattern} }
 GROUP BY ?x ORDER BY ?k ?x LIMIT ${size} OFFSET ${offset}`;

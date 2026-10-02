@@ -43,7 +43,7 @@ you want, or load them from a pinned release, e.g.
 
 | Option | Default | Meaning |
 |---|---|---|
-| `endpoint` | required | A SPARQL endpoint URL, or an object `{ url, name, start, types, ... }`. `name` heads the start column; `start` is a list of IRIs offered as starting points; `types` skips the "types in use" query. Any setting in `js/defaults.js` (label properties, limits, timeouts, geo properties) can be overridden here. |
+| `endpoint` | required | A SPARQL endpoint URL, or an object `{ url, name, start, types, ... }`. `name` heads the start column; `start` is a list of IRIs offered as starting points; `types` skips the "types in use" query. Any setting in `js/defaults.js` (label properties, hidden plumbing, limits, timeouts, geo properties) can be overridden here. The default label properties include SKOS-XL (`skosxl:prefLabel/skosxl:literalForm`), so datasets like the Crossref Funder Registry show names with no lens. |
 | `lens` | none | A lens object, or the URL of a lens JSON file (see `lenses/`). Optional: without one the browser runs generically. |
 | `urlState` | `'hash'` | Where the trail is kept: `'hash'`, `'search'` (query string), or `'none'` (in memory only). Parameters that aren't part of the trail are left alone. |
 | `urlParam` | none | Pack the trail into this one parameter (e.g. `'trail'`) instead of flat `c=`, `l=`, `t=`, `val=`, `q=`, `view=` parameters, which might clash with the host's. |
