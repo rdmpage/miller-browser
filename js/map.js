@@ -6,6 +6,14 @@
 const LEAFLET = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4';
 let leafletP = null;
 
+// Default tiles: OpenStreetMap's public tile server. Fine for light use; a
+// busy site should pass its own provider (see mount()'s `tiles` option).
+const OSM_TILES = {
+  url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  maxZoom: 19,
+};
+
 // `base` is a URL prefix serving leaflet.min.js and leaflet.min.css.
 function loadLeaflet(base = LEAFLET) {
   if (window.L) return Promise.resolve(window.L);
@@ -25,15 +33,15 @@ function loadLeaflet(base = LEAFLET) {
 
 // Draw `points` ([{ x, lat, long }]) in `el`. `onPick(x)` is called when a
 // point is clicked; `labelFor(x)` resolves to a tooltip label; `leaflet` is
-// an optional URL prefix for Leaflet. Returns { highlight(x), resize() }.
-export async function drawMap(el, points, { onPick, labelFor, leaflet }) {
+// an optional URL prefix for Leaflet; `tiles` is { url, attribution,
+// maxZoom, ... } (anything else is passed to L.tileLayer as an option).
+// Returns { highlight(x), resize() }.
+export async function drawMap(el, points, { onPick, labelFor, leaflet, tiles }) {
   const L = await loadLeaflet(leaflet);
   const accent = getComputedStyle(el).getPropertyValue('--accent').trim() || '#6a5acd';
   const map = L.map(el, { preferCanvas: true, worldCopyJump: true });
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 18,
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-  }).addTo(map);
+  const { url, ...tileOptions } = { ...OSM_TILES, ...tiles };
+  L.tileLayer(url, tileOptions).addTo(map);
 
   const plain = { radius: 5, weight: 1, color: '#fff', fillColor: accent, fillOpacity: 0.8 };
   const picked = { radius: 8, weight: 2, color: '#1d2330', fillColor: '#ffb400', fillOpacity: 1 };

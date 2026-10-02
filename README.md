@@ -50,6 +50,7 @@ you want, or load them from a pinned release, e.g.
 | `trail` | none | A trail string to start from when the URL holds none (see `js/trail.js`). |
 | `onTrailChange` | none | Called with the trail string whenever it changes, e.g. for the host's own routing or page title. |
 | `theme` | follows the system | `'light'` or `'dark'` to force a theme. |
+| `tiles` | OpenStreetMap | Map tiles: `{ url, attribution, maxZoom }`, e.g. `{ url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', attribution: '&copy; OpenStreetMap contributors', maxZoom: 19 }`. Any other keys (e.g. `subdomains`) are passed to Leaflet's `L.tileLayer`. OSM's public tile server is fine for light use; a busy site should use its own provider. |
 | `leaflet` | cdnjs 1.9.4 | URL prefix serving `leaflet.min.js` and `leaflet.min.css`, if the host serves Leaflet itself. If the page already has `window.L`, that is used. |
 
 Styling is scoped: every rule in `css/miller.css` is under `.miller` (added to

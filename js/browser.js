@@ -487,6 +487,7 @@ export function mount(root, options = {}) {
             onPick: (x) => go(index, [{ k: 'card', iri: x }]),
             labelFor: async (x) => (await state.q.brief([x])).get(x)?.label || localName(x),
             leaflet: options.leaflet,
+            tiles: options.tiles,
           });
           mapApi.highlight(activeIri);
         })
