@@ -1,18 +1,21 @@
-// Map view of a set, drawn with Leaflet. Leaflet is loaded from cdnjs the
-// first time a map is shown, so the rest of the browser has no dependencies.
+// Map view of a set, drawn with Leaflet. Leaflet is loaded the first time a
+// map is shown (from cdnjs unless the host says otherwise, or not at all if
+// the page already has window.L), so the rest of the browser has no
+// dependencies.
 
 const LEAFLET = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4';
 let leafletP = null;
 
-function loadLeaflet() {
+// `base` is a URL prefix serving leaflet.min.js and leaflet.min.css.
+function loadLeaflet(base = LEAFLET) {
   if (window.L) return Promise.resolve(window.L);
   leafletP ??= new Promise((resolve, reject) => {
     const css = document.createElement('link');
     css.rel = 'stylesheet';
-    css.href = `${LEAFLET}/leaflet.min.css`;
+    css.href = `${base}/leaflet.min.css`;
     document.head.append(css);
     const js = document.createElement('script');
-    js.src = `${LEAFLET}/leaflet.min.js`;
+    js.src = `${base}/leaflet.min.js`;
     js.onload = () => resolve(window.L);
     js.onerror = () => { leafletP = null; reject(new Error('Could not load Leaflet')); };
     document.head.append(js);
@@ -21,10 +24,10 @@ function loadLeaflet() {
 }
 
 // Draw `points` ([{ x, lat, long }]) in `el`. `onPick(x)` is called when a
-// point is clicked; `labelFor(x)` resolves to a tooltip label. Returns
-// { highlight(x), resize() }.
-export async function drawMap(el, points, { onPick, labelFor }) {
-  const L = await loadLeaflet();
+// point is clicked; `labelFor(x)` resolves to a tooltip label; `leaflet` is
+// an optional URL prefix for Leaflet. Returns { highlight(x), resize() }.
+export async function drawMap(el, points, { onPick, labelFor, leaflet }) {
+  const L = await loadLeaflet(leaflet);
   const accent = getComputedStyle(el).getPropertyValue('--accent').trim() || '#6a5acd';
   const map = L.map(el, { preferCanvas: true, worldCopyJump: true });
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {

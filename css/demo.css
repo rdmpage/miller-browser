@@ -1,0 +1,54 @@
+/* The demo host page around the browser (index.html): a header with the
+   endpoint picker, and the browser filling the rest. The browser itself is
+   styled by miller.css. */
+:root {
+  --page-bg: #ffffff;
+  --page-ink: #1d2330;
+  --page-muted: #5d6878;
+  --page-line: #dde4ee;
+  --page-accent: #6a5acd;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 14px;
+  color: var(--page-ink);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page-bg: #12161d;
+    --page-ink: #e6ebf2;
+    --page-muted: #97a3b4;
+    --page-line: #2c3544;
+    --page-accent: #a99df2;
+  }
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; margin: 0; }
+
+body {
+  background: var(--page-bg);
+  display: flex;
+  flex-direction: column;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 16px;
+}
+.top h1 { font-size: 15px; margin: 0; letter-spacing: 0.02em; }
+.top .hat { color: var(--page-accent); }
+.top label { color: var(--page-muted); display: flex; gap: 8px; align-items: center; }
+.top select {
+  font: inherit;
+  color: inherit;
+  background: var(--page-bg);
+  border: 1px solid var(--page-line);
+  border-radius: 6px;
+  padding: 4px 8px;
+}
+
+#browser { flex: 1; min-height: 0; }

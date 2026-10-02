@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Embedding example · miller-browser</title>
+  <link rel="stylesheet" href="css/miller.css">
+  <style>
+    /* The host page's own layout and styles; the browser only needs a box
+       with a height. */
+    body { margin: 0; font-family: Georgia, serif; }
+    .site-header { padding: 12px 20px; border-bottom: 1px solid #ddd; }
+    .site-header p { margin: 4px 0 0; color: #666; font-size: 14px; }
+    #browser { height: calc(100vh - 80px); }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <strong>A host page</strong>
+    <p>One dataset, no endpoint picker; the trail is kept in <code>?trail=</code>.</p>
+  </header>
+  <div id="browser"></div>
+  <script type="module">
+    import { mount } from './js/browser.js';
+
+    mount(document.getElementById('browser'), {
+      endpoint: {
+        url: 'https://koetai.semscape.org/u/0000-0001-9773-4008/human-phenotype-ontology/sparql',
+        name: 'Human Phenotype Ontology',
+        start: ['http://purl.obolibrary.org/obo/HP_0000118'],
+      },
+      lens: 'lenses/hpo.json',  // optional
+      urlState: 'search',       // keep the trail in the query string...
+      urlParam: 'trail',        // ...packed into one parameter
+    });
+  </script>
+</body>
+</html>

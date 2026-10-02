@@ -13,9 +13,55 @@ Serve the folder statically and open it in a browser:
 php -S localhost:8000
 ```
 
-Endpoints are listed in `config/endpoints.json`, each with an optional lens
-(`lenses/*.json`) and some start entities. The trail lives in the URL hash, so
-any view can be bookmarked or shared.
+`index.html` is a demo host: an endpoint picker over `config/endpoints.json`
+(each endpoint with an optional lens in `lenses/*.json` and some start
+entities) and one browser below it. The trail lives in the URL hash, so any
+view can be bookmarked or shared. `embed.html` shows the browser inside
+another page.
+
+## Embedding
+
+The browser is a plain ES module with no dependencies (Leaflet is loaded
+only when a map is first shown). Copy `js/`, `css/miller.css` and any lenses
+you want, or load them from a pinned release, e.g.
+`https://cdn.jsdelivr.net/gh/rdmpage/miller-browser@v0.1.0/js/browser.js`.
+
+```html
+<link rel="stylesheet" href="css/miller.css">
+<div id="browser" style="height: 80vh"></div>
+<script type="module">
+  import { mount } from './js/browser.js';
+
+  const browser = mount(document.getElementById('browser'), {
+    endpoint: 'https://example.org/dataset/sparql',
+  });
+</script>
+```
+
+`mount(element, options)` takes over `element` (give it a height) and returns
+`{ ready, trail, setTrail(string), destroy() }`. Options:
+
+| Option | Default | Meaning |
+|---|---|---|
+| `endpoint` | required | A SPARQL endpoint URL, or an object `{ url, name, start, types, ... }`. `name` heads the start column; `start` is a list of IRIs offered as starting points; `types` skips the "types in use" query. Any setting in `js/defaults.js` (label properties, limits, timeouts, geo properties) can be overridden here. |
+| `lens` | none | A lens object, or the URL of a lens JSON file (see `lenses/`). Optional: without one the browser runs generically. |
+| `urlState` | `'hash'` | Where the trail is kept: `'hash'`, `'search'` (query string), or `'none'` (in memory only). Parameters that aren't part of the trail are left alone. |
+| `urlParam` | none | Pack the trail into this one parameter (e.g. `'trail'`) instead of flat `c=`, `l=`, `t=`, `val=`, `q=`, `view=` parameters, which might clash with the host's. |
+| `trail` | none | A trail string to start from when the URL holds none (see `js/trail.js`). |
+| `onTrailChange` | none | Called with the trail string whenever it changes, e.g. for the host's own routing or page title. |
+| `theme` | follows the system | `'light'` or `'dark'` to force a theme. |
+| `leaflet` | cdnjs 1.9.4 | URL prefix serving `leaflet.min.js` and `leaflet.min.css`, if the host serves Leaflet itself. If the page already has `window.L`, that is used. |
+
+Styling is scoped: every rule in `css/miller.css` is under `.miller` (added to
+the mounted element), and colours and column widths are custom properties on
+`.miller` (`--bg`, `--panel`, `--ink`, `--muted`, `--line`, `--accent`,
+`--selected`, `--col-w`, `--card-w`, ...), so a host can restyle it by
+overriding them, e.g. `#browser.miller { --accent: #0a7; }`. Narrow layouts
+respond to the browser's own width, not the window's.
+
+The endpoint must allow cross-origin requests from the host page, unless it
+is on the same origin. Several browsers can be mounted on one page, but only
+one should keep its trail in the URL (give the others `urlState: 'none'`).
 
 ## The idea
 
