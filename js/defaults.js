@@ -37,6 +37,15 @@ export const DEFAULTS = {
   timeoutMs: 25000,
   maxConcurrent: 3,
 
+  // Types whose instances are pictures. The picture's URL is the first of
+  // `properties` that has a value, else the entity's own IRI. A lens `image`
+  // template for the type overrides this (or turns it off with false).
+  imageTypes: {
+    'http://xmlns.com/foaf/0.1/Image': {},
+    'https://schema.org/ImageObject': { properties: ['https://schema.org/contentUrl', 'https://schema.org/url'] },
+    'http://schema.org/ImageObject': { properties: ['http://schema.org/contentUrl', 'http://schema.org/url'] },
+  },
+
   // How an entity can carry a point, for the map view: WKT literals, or
   // latitude/longitude pairs.
   geo: {

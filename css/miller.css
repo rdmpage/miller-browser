@@ -356,6 +356,15 @@
 
 .miller .item .badge { background: var(--bg); color: var(--muted); border: 1px solid var(--line); }
 
+.miller .item-thumb {
+  flex: none;
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 4px;
+  background: var(--line);
+}
+
 .miller .row-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
 
 .miller .row-main { overflow-wrap: anywhere; line-height: 1.3; }

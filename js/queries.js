@@ -124,6 +124,7 @@ export class Queries {
       types,
       computed: fields.map((f) => ({ label: f.label, values: pv.get(f.ref) || [] })).filter((f) => f.values.length),
       label: labelFrom(s, flat, this.lens),
+      image: this.lens.imageFor(s, types, flat),
       truncated: rows.length >= 500,
     };
   }
@@ -253,7 +254,13 @@ GROUP BY ?x ORDER BY ?k ?x LIMIT ${size} OFFSET ${offset}`;
       const types = m.get(RDF_TYPE) || [];
       const spec = this.lens.forTypes(types);
       const summary = (spec?.summary || []).map((p) => m.get(p)?.[0]).filter(Boolean).join(' · ');
-      result.set(x, { label: labelFrom(x, m, this.lens), types, summary });
+      result.set(x, {
+        label: labelFrom(x, m, this.lens),
+        types,
+        summary,
+        // A thumbnail only when the item is itself a picture.
+        image: this.lens.isImage(types) ? this.lens.imageFor(x, types, m) : null,
+      });
     }
     return result;
   }

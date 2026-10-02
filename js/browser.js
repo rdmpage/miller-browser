@@ -9,7 +9,7 @@
 // column; the trail (see trail.js) is everything after it.
 
 import { SparqlClient } from './sparql.js';
-import { Lens, localName, imageFor, RDF_TYPE } from './lens.js';
+import { Lens, localName, RDF_TYPE } from './lens.js';
 import { Queries } from './queries.js';
 import { drawMap } from './map.js';
 import { DEFAULTS } from './defaults.js';
@@ -279,8 +279,7 @@ export function mount(root, options = {}) {
       head.textContent = card.label;
       kindEl.replaceChildren(...card.types.map((t) =>
         $('a', { class: 'type-chip', href: '#', onclick: (e) => { e.preventDefault(); go(index, [{ k: 'type', t }]); } }, localName(t))));
-      const img = imageFor(step.iri, card.types, state.lens);
-      if (img) cardEl.insertBefore($('img', { class: 'thumb', src: img, alt: '' }), fieldsBox);
+      if (card.image) cardEl.insertBefore($('img', { class: 'thumb', src: card.image, alt: '' }), fieldsBox);
 
       // Outgoing links to untyped resources are shown inline as fields; typed
       // ones become link groups. Wait for the out-groups to know which is which.
@@ -532,6 +531,8 @@ export function mount(root, options = {}) {
               const info = b.get(x);
               if (!info) continue;
               labelItem(r, info.label, info.summary || info.types.map(localName).join(', '));
+              // Pictures get a small thumbnail (lazy: these may be full-size originals).
+              if (info.image) r.prepend($('img', { class: 'item-thumb', src: info.image, alt: '', loading: 'lazy', decoding: 'async' }));
             }
           } catch { /* keep IRI tails as labels */ }
         })
